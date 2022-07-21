@@ -1,7 +1,7 @@
 
 from user import User
 
-class Student(User)):
+class Student(User):
 
     allStudents = []
 
@@ -9,15 +9,30 @@ class Student(User)):
         self.rollno = Rollno
         self.myBooks = []
         
+    @staticmethod
+    def requestBookName(BookId,Bookname):
+        isBookExist, book = Book.findBook(authorName)
+        if isBookExist:
+            return False, "Book is not available"    
+        Book.bookId += 1
+        newBook = Book(booId, authorName)
+        Book.allBooks.append(newBook)
+        return True, "Book available!"
 
-    def requestBookName():
-        pass
+    @staticmethod
+    def returnBook(BookName):
+        return book 
 
-    def returnBook():
-        pass
+        
+    @staticmethod
+    def findMyBookByName(AuthorName,myBooks):
+        myBooks = []
+        for Book in Book.MyBooks:
+            if book.AuthoName == AuthorName:
+                Books.append((book.bookName, AuthorName))
+                return book
 
-    def findMyBookByName():
-        pass
+
 
 
     @staticmethod
