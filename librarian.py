@@ -1,6 +1,4 @@
-import stat
 from user import User
-# add the class name
 from login_system import LoginSystemInterface
 
 class Librarian(User):
