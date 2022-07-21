@@ -1,4 +1,5 @@
-
+from typing_extensions import Self
+from librarian import Librarian
 from user import User
 
 class Student(User):
@@ -8,48 +9,70 @@ class Student(User):
     def init(self, Rollno):
         self.rollno = Rollno
         self.myBooks = []
-        
-    @staticmethod
-    def requestBookName(BookId,Bookname):
-        isBookExist, book = Book.findBook(authorName)
-        if isBookExist:
-            return False, "Book is not available"    
-        Book.bookId += 1
-        newBook = Book(booId, authorName)
-        Book.allBooks.append(newBook)
-        return True, "Book available!"
-
-    @staticmethod
-    def returnBook(BookName):
-        return book 
 
         
-    @staticmethod
-    def findMyBookByName(AuthorName,myBooks):
+    def requestBook(self, bookName):
+        isBookIssued, bookObject = Librarian.processIssueRequest(bookName)
+        if not isBookIssued:
+            return False
+        self.myBooks.append(bookObject)
+        return True
+
+    def returnBook(self,bookName):
+        isBookIssued, bookObject = Librarian.acceptBookReturn(bookName)
+        if not isBookIssued:
+            return False
+        bookObject = self.findMyBook
+        self.myBooks.remove(bookObject)
+        return True
+        
+
+    def findMyBookByName(self, bookName):
         myBooks = []
-        for Book in Book.MyBooks:
-            if book.AuthoName == AuthorName:
-                Books.append((book.bookName, AuthorName))
+        for book in self.MyBooks:
+            if book.bookName == bookName:
                 return book
 
 
+    @staticmethod
+    def addStudent(name, age, authorizer):
+        isStudentExists, studentIndex = Librarian.isLibrarianExists(authorizer.getUsername())
+        if isStudentExists:
+            return False, "Student already exists"
+        newStudent = Student(name, age, authorizer)
+        Student.all.append(newStudent)
+            return True, "Student added successfully"
+
+    @staticmethod
+    def readStudent(authorizer, property):
+        isStudentExists, studentIndex = Student.isStudentExists(authorizer.getUsername())
+        if not isStudentExists:
+            return False, "Student does not exists"
+        returnvalue = getattr(Student.allStudent[studentIndex], property)
+            return True, returnvalue
 
 
     @staticmethod
-    def addStudent():
-        pass
+    def updateStudent(authorizer, property, newValue):
+        isStudentExists, studentIndex = Student.StudentExists(authorizer.getUsername())
+        if not isStudentExists:
+            return False, "Student does not exists"
+        setattr(Student.allStudent[StudentIndex], property, newValue)
+            return True, "Student updated successfully"
+
+
 
     @staticmethod
-    def readStudent():
-        pass
+    def deleteStudent(authorizer):
+        isStudentExists, studentIndex = Student.isStudentExists(authorizer.getUsername())
+        if not isStudentExists:
+            return False, "Student does not exists"
+        Student.allStudent[StudentIndex].isExist = False
+            return True, "Student deleted successfully"
 
-    @staticmethod
-    def updateStudent():
-        pass
+    
 
-    @staticmethod
-    def deleteStudent():
-        pass
+    
 
 
 
