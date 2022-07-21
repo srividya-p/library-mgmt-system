@@ -1,4 +1,5 @@
 from uuid import uuid4
+from datetime import date, timedelta
 from book_copy import BookCopy
 
 class Book:
@@ -126,7 +127,11 @@ class Book:
         if not isAvailable:
             return False, 'This book is not available.'
 
+        bookCopy.returnDate = date.today() + timedelta(7)
         return True, bookCopy
+
+    def returnBook(self, bookCopy):
+        bookCopy.returnDate = None
 
     def displayBooksByAuthor(self, authorName):
         books = Book.findBooksByAuthorName(authorName)
