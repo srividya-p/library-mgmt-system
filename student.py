@@ -1,4 +1,4 @@
-from typing_extensions import Self
+
 from librarian import Librarian
 from user import User
 
