@@ -4,7 +4,7 @@ from book_copy import BookCopy
 
 class Book:
     allBooks = []
-    def __init__(self, bookId, bookName, authorName) -> None:
+    def __init__(self, bookId, bookName, authorName):
         self.bookId = bookId
         self.bookName = bookName
         self.authorName = authorName
@@ -14,7 +14,7 @@ class Book:
     @staticmethod
     def findBookByName(bookName):
         for book in Book.allBooks:
-            if book.bookName == bookName:
+            if book.bookName == bookName and book.isExists:
                 return True, book
         return False, None
 
@@ -22,13 +22,13 @@ class Book:
     def findBooksByAuthorName(authorName):
         books = []
         for book in Book.allBooks:
-            if book.authorName == authorName:
+            if book.authorName == authorName and book.isExists:
                 books.append((book.bookName, authorName))
         return books
 
     def findBookCopyById(self, bookCopyId):
         for bookCopy in self.bookCopies:
-            if bookCopy.copyId == bookCopyId:
+            if bookCopy.copyId == bookCopyId and bookCopy.isExists:
                 return True, bookCopy
         return False, None
 
@@ -113,7 +113,7 @@ class Book:
 
     def checkBookAvailablity(self, book):
         for bookCopy in book.bookCopies:
-            if bookCopy.returnDate != None:
+            if not bookCopy.isIssued():
                 return True, bookCopy
         return False, None
         

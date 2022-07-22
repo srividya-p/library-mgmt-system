@@ -7,4 +7,3 @@ class User:
         self.fullName = fullName
         self.age = age
         self.authorizer = authorizer
-        self.isExists = True

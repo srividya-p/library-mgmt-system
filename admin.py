@@ -1,5 +1,6 @@
 from login_system import LoginSystemInterface
 from librarian import Librarian
+from student import Student
 
 admin = None
 class Admin:
@@ -15,13 +16,49 @@ class Admin:
         return admin
 
     def addLibrarian(self, fullName, age, authorizer):
-        Librarian.addLibrarian(fullName, age, authorizer)
+        if not self.authorizer.isLoggedIn():
+            print('You cannot perform this operation. you are not logged in.')
+            return
+        Librarian.createLibrarian(fullName, age, authorizer)
 
-    def readLibrarian(self, userName):
-        Librarian.readLibrarian(userName)
+    def readLibrarian(self):
+        if not self.authorizer.isLoggedIn():
+            print('You cannot perform this operation. you are not logged in.')
+            return
+        Librarian.readLibrarian()
 
-    def updateLibrarian(self, userName, property, newValue):
-        Librarian.readLibrarian(userName, property, newValue)
+    def updateLibrarian(self, property, newValue):
+        if not self.authorizer.isLoggedIn():
+            print('You cannot perform this operation. you are not logged in.')
+            return
+        Librarian.updateLibrarian(property, newValue)
 
-    def deleteLibrarian(self, userName):
-        Librarian.deleteLibrarian(userName)
+    def deleteLibrarian(self):
+        if not self.authorizer.isLoggedIn():
+            print('You cannot perform this operation. you are not logged in.')
+            return
+        Librarian.deleteLibrarian()
+
+    def createStudentAccount(self, fullName, age, rollNo, authorizer):
+        if not self.authorizer.isLoggedIn():
+            print('You cannot perform this operation. you are not logged in.')
+            return
+        Student.addStudent(fullName, age, rollNo, authorizer)
+
+    def searchStudentDetails(self, userName):
+        if not self.authorizer.isLoggedIn():
+            print('You cannot perform this operation. you are not logged in.')
+            return
+        Student.findStudent(userName)
+
+    def updateStudent(self, userName, property, newValue):
+        if not self.authorizer.isLoggedIn():
+            print('You cannot perform this operation. you are not logged in.')
+            return
+        Student.updateStudent(userName, property, newValue)
+
+    def deleteStudent(self, userName):
+        if not self.authorizer.isLoggedIn():
+            print('You cannot perform this operation. you are not logged in.')
+            return
+        Student.deleteStudent(userName)

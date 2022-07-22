@@ -33,3 +33,6 @@ class BookCopy:
 
     def deleteBookCopy(self):
         self.isExists = False
+
+    def isIssued(self):
+        return self.returnDate != None

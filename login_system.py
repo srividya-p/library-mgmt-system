@@ -17,11 +17,12 @@ class LoginSystem(LoginSystemInterface):
 
     def login(self, userName, password):
         """Login method for all actors"""
-        if self.userName != userName or self.password == password:
+        if self.userName != userName or self.password != password:
             print("Invalid credentials!")
             return
         
         self.loggedIn = True
+        print('Logged in successfully.')
 
     def logout(self):
         """Logout method for all actors"""
