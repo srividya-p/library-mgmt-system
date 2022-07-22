@@ -8,6 +8,7 @@ class Librarian(User):
     allLibrarians = []
 
     def __init__(self):
+        super()
         self.authorizer = LoginSystemInterface
 
     @staticmethod
