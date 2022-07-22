@@ -101,3 +101,7 @@ class Librarian(User):
         if not isDeleted:
             return False, statement
         return True, statement
+    
+    def fetchBooksByAuthor(authorName):
+        Book.displayBookByAuthorName(authorName)
+        return
