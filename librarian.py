@@ -89,3 +89,6 @@ class Librarian(User):
 
         Book.returnBook(bookCopy)
         return 'Book returned successfully.'
+
+    def fetchBooksByAuthor(self, authorName):
+        Book.displayBooksByAuthor(authorName)
