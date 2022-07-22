@@ -1,64 +1,66 @@
+from __future__ import annotations
+
 from login_system import LoginSystemInterface
 from librarian import Librarian
 from student import Student
 
 admin = None
 class Admin:
-    def __init__(self, authorizer=LoginSystemInterface):
-        self.authorizer = authorizer
+    def __init__(self, credentials=LoginSystemInterface):
+        self.credentials = credentials
 
     @staticmethod
-    def createAdmin(authorizer):
+    def createAdmin(credentials) -> Admin:
         global admin
         if admin != None:
             return admin
-        admin = Admin(authorizer)
+        admin = Admin(credentials)
         return admin
 
-    def addLibrarian(self, fullName, age, authorizer):
-        if not self.authorizer.isLoggedIn():
+    def addLibrarian(self, fullName, age, credentials) -> Librarian:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
-        Librarian.createLibrarian(fullName, age, authorizer)
+        return Librarian.createLibrarian(fullName, age, credentials)
 
-    def readLibrarian(self):
-        if not self.authorizer.isLoggedIn():
+    def readLibrarian(self) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Librarian.readLibrarian()
 
-    def updateLibrarian(self, property, newValue):
-        if not self.authorizer.isLoggedIn():
+    def updateLibrarian(self, property, newValue) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Librarian.updateLibrarian(property, newValue)
 
-    def deleteLibrarian(self):
-        if not self.authorizer.isLoggedIn():
+    def deleteLibrarian(self) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Librarian.deleteLibrarian()
 
-    def createStudentAccount(self, fullName, age, rollNo, authorizer):
-        if not self.authorizer.isLoggedIn():
+    def createStudentAccount(self, fullName, age, rollNo, credentials) -> Student:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
-        Student.addStudent(fullName, age, rollNo, authorizer)
+        return Student.addStudent(fullName, age, rollNo, credentials)
 
-    def searchStudentDetails(self, userName):
-        if not self.authorizer.isLoggedIn():
+    def searchStudentDetails(self, userName) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Student.findStudent(userName)
 
-    def updateStudent(self, userName, property, newValue):
-        if not self.authorizer.isLoggedIn():
+    def updateStudent(self, userName, property, newValue) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Student.updateStudent(userName, property, newValue)
 
-    def deleteStudent(self, userName):
-        if not self.authorizer.isLoggedIn():
+    def deleteStudent(self, userName) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Student.deleteStudent(userName)

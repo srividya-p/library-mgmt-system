@@ -9,6 +9,7 @@ class LoginSystemInterface(ABC):
     def logout():
         pass
 
+#credential
 class LoginSystem(LoginSystemInterface):
     def __init__(self, userName, password):
         self.userName = userName

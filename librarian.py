@@ -1,36 +1,39 @@
+from __future__ import annotations
+
 from user import User
 from login_system import LoginSystemInterface
 from book import Book
+from book_copy import BookCopy
 
 librarian = None
 
 class Librarian(User):
-    def __init__(self, fullName, age, authorizer = LoginSystemInterface):
-        super().__init__(fullName, age, authorizer)
+    def __init__(self, fullName, age, credentials = LoginSystemInterface) -> None:
+        super().__init__(fullName, age, credentials)
 
     @staticmethod
-    def createLibrarian(fullName, age, authorizer):
+    def createLibrarian(fullName, age, credentials) -> Librarian:
         global librarian
         if librarian != None:
             return librarian
-        librarian = Librarian(fullName, age, authorizer)
+        librarian = Librarian(fullName, age, credentials)
         print("Librarian created successfully.")
         return librarian
 
     @staticmethod
-    def readLibrarian():
+    def readLibrarian() -> None:
         global librarian
         if librarian == None:
             print('Librarian does not exist.')
             return 
         print(f"""
         Name: {librarian.fullName}
-        Username: {librarian.authorizer.getUserName()}
+        Username: {librarian.credentials.getUserName()}
         Age: {librarian.age}
         """)
 
     @staticmethod
-    def updateLibrarian(property, newValue):
+    def updateLibrarian(property, newValue) -> None:
         global librarian
         if librarian == None:
             print('Librarian does not exist.')
@@ -40,7 +43,7 @@ class Librarian(User):
         print("Librarian's "+property+" changed from "+str(oldValue)+" to "+str(newValue))
 
     @staticmethod
-    def deleteLibrarian():
+    def deleteLibrarian() -> None:
         global librarian
         if librarian == None:
             print('Librarian does not exist.')
@@ -48,93 +51,41 @@ class Librarian(User):
         librarian = None
         print("Librarian deleted successfully.")
 
-    def addBook(self, bookName, authorName, ISBN, publicationYear, price):
-        if not self.authorizer.isLoggedIn():
+    def addBook(self, bookName, authorName, ISBN, publicationYear, price) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
-        Book.addBook(self, bookName, authorName, ISBN, publicationYear, price)
+        Book.addBook(bookName, authorName, ISBN, publicationYear, price)
 
-    def readBookDetails(self,bookName):
-        if not self.authorizer.isLoggedIn():
+    def readBookDetails(self,bookName) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Book.displayBookDetail(bookName)
 
-    def updateBook(self, bookName, property, newValue):
-        if not self.authorizer.isLoggedIn():
+    def updateBook(self, bookName, property, newValue) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Book.updateBookDetails(bookName, property, newValue)
 
-    def deleteBook(self, bookName):
-        if not self.authorizer.isLoggedIn():
+    def deleteBook(self, bookName) -> None:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         Book.deleteBook(bookName)
 
-    def processIssueRequest(self, bookName):
-        if not self.authorizer.isLoggedIn():
+    def processIssueRequest(self, bookName) -> tuple[bool, str, BookCopy]:
+        if not self.credentials.isLoggedIn():
             print('You cannot perform this operation. you are not logged in.')
             return
         return Book.issueBook(bookName)
        
-    def acceptBookReturn(self, bookCopy):
-        if not self.authorizer.isLoggedIn():
-            print('You cannot perform this operation. you are not logged in.')
-            return
-        if not bookCopy.isIssued():
-            return False, 'This book was not issued.'
+    def acceptBookReturn(self, bookCopy) -> str:
+        if not self.credentials.isLoggedIn():
+            return False, 'You cannot perform this operation. you are not logged in.'
+        if not bookCopy.getIssueStatus():
+            return 'This book was not issued.'
 
         Book.returnBook(bookCopy)
-        return True, ''
-
-    # @staticmethod
-    # def isLibrarianExists(username):
-    #     i = -1
-    #     for l in Librarian.allLibrarians:
-    #         i += 1
-    #         if l.authorizer.getUsername() == username:
-    #             return True, i
-    #     return False, "Librarian does not exists"
-
-    # @staticmethod
-    # def addLibrarian(fullName, age, authorizer):
-    #     isLibrarianExists, _ = Librarian.isLibrarianExists(authorizer.getUsername())
-    #     if isLibrarianExists:
-    #         print("Librarian already exists.")
-    #         return
-        
-    #     newLibrarian = Librarian(fullName, age, authorizer)
-    #     Librarian.allLibrarians.append(newLibrarian)
-    #     print("Librarian added successfully.")
-
-    # @staticmethod
-    # def readLibrarian(userName):
-    #     isLibrarianExists, librarianIndex = Librarian.isLibrarianExists(userName)
-    #     if not isLibrarianExists:
-    #         print("Librarian does not exist.")
-    #         return
-    #     librarian = Librarian.allLibrarians[librarianIndex]
-    #     print(f"""
-    #     Name: {librarian.fullName}\n
-    #     Username: {librarian.authorizer.getUserName()}\n
-    #     Age: {librarian.age}\n\n
-    #     """)
-        
-    # @staticmethod
-    # def updateLibrarian(userName, property, newValue):
-    #     isLibrarianExists, librarianIndex = Librarian.isLibrarianExists(userName)
-    #     if not isLibrarianExists:
-    #         print("Librarian does not exist.")
-    #         return
-    #     setattr(Librarian.allLibrarians[librarianIndex], property, newValue)
-    #     print("Librarian updated successfully.")
-
-    # @staticmethod
-    # def deleteLibrarian(userName):
-    #     isLibrarianExists, librarianIndex = Librarian.isLibrarianExists(userName)
-    #     if not isLibrarianExists:
-    #         print("Librarian does not exist.")
-    #         return
-    #     Librarian.allLibrarians[librarianIndex].isExists = False
-    #     print("Librarian deleted successfully.")
+        return 'Book returned successfully.'

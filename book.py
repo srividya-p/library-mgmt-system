@@ -1,10 +1,12 @@
+from __future__ import annotations
+
 from uuid import uuid4
 from datetime import date, timedelta
 from book_copy import BookCopy
 
 class Book:
     allBooks = []
-    def __init__(self, bookId, bookName, authorName):
+    def __init__(self, bookId, bookName, authorName) -> None:
         self.bookId = bookId
         self.bookName = bookName
         self.authorName = authorName
@@ -12,32 +14,32 @@ class Book:
         self.isExists = True
 
     @staticmethod
-    def findBookByName(bookName):
+    def findBookByName(bookName) -> tuple[bool, Book]:
         for book in Book.allBooks:
             if book.bookName == bookName and book.isExists:
                 return True, book
         return False, None
 
     @staticmethod
-    def findBooksByAuthorName(authorName):
+    def findBooksByAuthorName(authorName) -> list[Book]:
         books = []
         for book in Book.allBooks:
             if book.authorName == authorName and book.isExists:
                 books.append((book.bookName, authorName))
         return books
 
-    def findBookCopyById(self, bookCopyId):
+    def findBookCopyById(self, bookCopyId) -> tuple[bool, BookCopy]:
         for bookCopy in self.bookCopies:
             if bookCopy.copyId == bookCopyId and bookCopy.isExists:
                 return True, bookCopy
         return False, None
 
     @staticmethod
-    def addBook(bookName, authorName, ISBN, publicationYear, price):
+    def addBook(bookName, authorName, ISBN, publicationYear, price) -> Book:
         bookFound, book = Book.findBookByName(bookName)
         if not bookFound:
             bookId = str(uuid4())
-            newBook = Book(bookId, authorName, bookName)
+            newBook = Book(bookId, bookName, authorName)
             newBookCopy = BookCopy.createBookCopy(bookId, bookName, ISBN, publicationYear, price)
             newBook.bookCopies.append(newBookCopy)
             Book.allBooks.append(newBook)
@@ -48,7 +50,7 @@ class Book:
             return book
 
     @staticmethod
-    def displayBookDetails(bookName):
+    def displayBookDetails(bookName) -> None:
         bookFound, book = Book.findBookByName(bookName)
         if not bookFound:
             print('This book does not exist.')
@@ -63,7 +65,7 @@ class Book:
             bookCopy.displayBookCopy()
 
     @staticmethod
-    def updateBookDetails(bookName, property, newValue):
+    def updateBookDetails(bookName, property, newValue) -> None:
         bookFound, book = Book.findBookByName(bookName)
         if not bookFound:
             print('This book does not exist.')
@@ -75,7 +77,7 @@ class Book:
                 +" to "+str(getattr(book, property)))
 
     @staticmethod
-    def updateBookCopyDetails(bookName, bookCopyId, property, newValue):
+    def updateBookCopyDetails(bookName, bookCopyId, property, newValue) -> None:
         bookFound, book = Book.findBookByName(bookName)
         if not bookFound:
             print('This book does not exist.')
@@ -89,7 +91,7 @@ class Book:
         bookCopy.updateBookCopy(property, newValue)
 
     @staticmethod
-    def deleteBook(bookName):
+    def deleteBook(bookName) -> None:
         bookFound, book = Book.findBookByName(bookName)
         if not bookFound:
             print('This book does not exist.')
@@ -98,7 +100,7 @@ class Book:
         book.isExists = False
 
     @staticmethod
-    def deleteBookCopy(bookName, bookCopyId):
+    def deleteBookCopy(bookName, bookCopyId) -> None:
         bookFound, book = Book.findBookByName(bookName)
         if not bookFound:
             print('This book does not exist.')
@@ -111,29 +113,35 @@ class Book:
 
         bookCopy.deleteBookCopy()
 
-    def checkBookAvailablity(self, book):
+    def checkBookAvailablity(self, book) -> tuple[bool, BookCopy]:
         for bookCopy in book.bookCopies:
-            if not bookCopy.isIssued():
+            if not bookCopy.getIssueStatus():
                 return True, bookCopy
         return False, None
-        
-    def issueBook(self, bookName):
+    
+    @staticmethod
+    def issueBook(bookName) -> tuple[bool, str, BookCopy]:
         bookFound, book = Book.findBookByName(bookName)
         if not bookFound:
-            return False, 'This book does not exist.'
+            return False, 'This book does not exist.', None
 
         isAvailable, bookCopy = book.checkBookAvailablity(book)
 
         if not isAvailable:
-            return False, 'This book is not available.'
+            return False, 'This book is not available.', None
 
+        bookCopy.issueDate = date.today()
         bookCopy.returnDate = date.today() + timedelta(7)
-        return True, bookCopy
+        bookCopy.isIssued = True
+        return True, 'Issued successfully.', bookCopy
 
-    def returnBook(self, bookCopy):
+    @staticmethod
+    def returnBook(bookCopy) -> None:
+        bookCopy.issueDate = None
         bookCopy.returnDate = None
+        bookCopy.isIssued = True
 
-    def displayBooksByAuthor(self, authorName):
+    def displayBooksByAuthor(self, authorName) -> None:
         books = Book.findBooksByAuthorName(authorName)
 
         for book, author in books:
