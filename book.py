@@ -141,9 +141,13 @@ class Book:
         bookCopy.returnDate = None
         bookCopy.isIssued = True
 
-    def displayBooksByAuthor(self, authorName) -> None:
+    @staticmethod
+    def displayBooksByAuthor(authorName) -> None:
         books = Book.findBooksByAuthorName(authorName)
-
+        if len(books) == 0:
+            print('Author nor found.')
+            return 
+            
         for book, author in books:
             print(f"""
             Book Name: {book}\t

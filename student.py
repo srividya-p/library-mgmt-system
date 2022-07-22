@@ -88,3 +88,6 @@ class Student(User):
             return
         message = librarian.acceptBookReturn(bookCopy)
         print(message)
+
+    def getBooksByAuthorName(self, authorName, librarian) -> None:
+        librarian.fetchBooksByAuthor(authorName)

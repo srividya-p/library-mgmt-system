@@ -26,3 +26,9 @@ librarian.addBook('Book 4', 'Author 3', '#007', 2002, 400)
 student1.requestBook('Book 1', librarian)
 student1.returnBook('Book 1', librarian)
 
+student1.getBooksByAuthorName('Author 1', librarian)
+
+librarian.credentials.logout()
+student1.credentials.logout()
+admin.credentials.logout()
+
